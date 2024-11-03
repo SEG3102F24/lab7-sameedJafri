@@ -1,0 +1,9 @@
+<!-- authors.component.html -->
+<form [formGroup]="authorsForm" (ngSubmit)="onSubmit()">
+    <label for="authorId">Author ID:</label>
+    <input id="authorId" formControlName="authorId" type="text">
+    <button type="submit">Submit</button>
+  </form>
+  
+  <p *ngIf="errorMessage">{{ errorMessage }}</p>
+  <p *ngIf="authorData">{{ authorData }}</p>
