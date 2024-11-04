@@ -1,9 +1,16 @@
-<!-- authors.component.html -->
-<form [formGroup]="authorsForm" (ngSubmit)="onSubmit()">
-    <label for="authorId">Author ID:</label>
-    <input id="authorId" formControlName="authorId" type="text">
-    <button type="submit">Submit</button>
-  </form>
-  
-  <p *ngIf="errorMessage">{{ errorMessage }}</p>
-  <p *ngIf="authorData">{{ authorData }}</p>
+<div>
+  <h2>Search Our Author Collection</h2>
+  <div>
+    <label for="id">Author ID:</label>
+    <input type="text" #authorQuery id="id">
+    <button (click)="submit(authorQuery.value)">Search</button>
+  </div>
+
+  <!-- Display AuthorComponent when an author is selected -->
+  <div *ngIf="selectedAuthor">
+    <app-author [selectedAuthor]="selectedAuthor"></app-author>
+  </div>
+  <div *ngIf="!selectedAuthor">
+    <p>No author found with the given ID.</p>
+  </div>
+</div>

@@ -1,38 +1,46 @@
-import { Component } from '@angular/core';
+// authors.component.ts
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { BooksService } from '../books/service/books.service';
-import { CommonModule, NgIf } from '@angular/common';
-
+import { Author } from './model/author';
+import { AuthorService } from './service/authors.service';
+import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+import { AuthorComponent } from "./author/author.component";
 
 @Component({
   selector: 'app-authors',
   standalone: true,
-  imports: [NgIf, CommonModule, ReactiveFormsModule],
+  imports: [RouterModule, NgbModule, CommonModule, ReactiveFormsModule, AuthorComponent],
   templateUrl: './authors.component.html',
-  styleUrl: './authors.component.css'
+  styleUrls: ['./authors.component.css']
 })
-export class AuthorsComponent {
+export class AuthorsComponent implements OnInit {
   authorsForm: FormGroup;
-  authorData: any = null;
-  errorMessage: string = '';
+  selectedAuthor?: Author;
 
-  constructor(private fb: FormBuilder, private booksService: BooksService) {
+  constructor(private fb: FormBuilder, private authorService: AuthorService) {
     this.authorsForm = this.fb.group({
       authorId: ['']
     });
   }
 
-  onSubmit() {
-    this.booksService.getAuthor(this.authorsForm.value.authorId)
-      .subscribe(
-        (data: any) => {
-          this.authorData = data;
-          this.errorMessage = '';
-        },
-        (error: string) => {
-          this.errorMessage = 'Author not found';
-          this.authorData = null;
-        }
-      );
+  ngOnInit(): void {}
+
+  onSubmit(): void {
+    const authorId = this.authorsForm.get('authorId')?.value;
+    this.submit(authorId);
+  }
+
+  submit(authorId: string): void {
+    this.authorService.getAuthor(authorId).subscribe(
+      (author: Author) => {
+        this.selectedAuthor = author;
+      },
+      (error: any) => {
+        this.selectedAuthor = undefined;
+        console.error('Author not found', error);
+      }
+    );
   }
 }
